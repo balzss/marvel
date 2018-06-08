@@ -4,6 +4,7 @@ import fuzzySearch from 'fuzzysearch';
 
 const API_KEY = '937517d8496fc712bbb2e6291ca03b27';
 const PAGE_SIZE = 10;
+const LOREM_IPSUM = 'Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero\'s De Finibus Bonorum et Malorum for use in a type specimen book.';
 
 class Card extends Component {
     render() {
@@ -14,7 +15,24 @@ class Card extends Component {
                 </div>
                 <div className="right-side">
                     <h3 className="hero-name">{(this.props.data || {}).name}</h3>
-                    <p className="details">{(this.props.data || {}).description}</p>
+                    <p className="details">{(this.props.data || {}).description || LOREM_IPSUM}</p>
+                    <div className="button-row">
+                        <div className="button style1">
+                            <div className="text">
+                                comics
+                            </div>
+                        </div>
+                        <div className="button2">
+                            <div className="text">
+                                stories
+                            </div>
+                        </div>
+                        <div className="button">
+                            <div className="text">
+                                wiki
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
