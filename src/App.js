@@ -3,8 +3,26 @@ import './App.css';
 
 const API_KEY = '937517d8496fc712bbb2e6291ca03b27';
 
-function charactersEndpoint(startsWith) {
-    return `https://gateway.marvel.com/v1/public/characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=100`
+var heroes = [];
+
+async function getCharactersByLetter(startsWith, offset = 0) {
+    const endPoint = 'https://gateway.marvel.com/v1/public/' + `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=100&offset=${offset}`;
+
+    const retVal = await fetch(endPoint)
+        .then(response => response.json())
+        .then(result => {
+            return result.data;
+    });
+
+    console.log(retVal);
+
+    if(retVal.count >= 100) {
+        console.log('if ag');
+        const next = await getCharactersByLetter(startsWith, offset + 100);
+        return [...retVal.results, ...next];
+    } else {
+        return retVal.results;
+    }
 }
 
 class Card extends Component {
@@ -25,7 +43,8 @@ class App extends Component {
         super(props);
         this.state = {
             searchQuery: '',
-            results: []
+            results: [],
+            heroes: []
         };
     }
 
@@ -33,20 +52,34 @@ class App extends Component {
         const typedQuery = event.target.value;
         this.setState({searchQuery: typedQuery});
 
-        if(typedQuery !== '') {
+        if(typedQuery.length === 1) {
             this.getSearchResults(typedQuery);
-        } else {
+        } else if (typedQuery.length === 0) {
             this.setState({results: []});
         }
     }
 
-    getSearchResults(startsWith) {
-        fetch(charactersEndpoint(startsWith))
-            .then(response => response.json())
-            .then(result => {
-                this.setState({results: result.data.results});
-                console.log(result.data.results);
-        });
+    async getSearchResults(startsWith) {
+        const endPoint = 'https://gateway.marvel.com/v1/public/' +
+            `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=100&offset=`;
+
+        this.setState({results: []});
+
+        let i = 0;
+        while(true) {
+            const retVal = await fetch(endPoint + (i * 100))
+                .then(response => response.json())
+                .then(result => {
+                    return result.data;
+            });
+            this.state.results.push(...retVal.results);
+            this.setState({results: [...this.state.results, ...retVal.results]});
+            console.log(this.state.results);
+
+            if(retVal.count < 100) break;
+
+            i++;
+        }
     }
 
     createResultList() {
