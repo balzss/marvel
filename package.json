@@ -14,7 +14,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && git push origin `git subtree split --prefix build master`:gh-pages --force"
+    "deploy": "git push origin `git subtree split --prefix build master`:gh-pages --force"
   },
   "homepage": "https://balzss.github.io/marvel",
   "devDependencies": {}
