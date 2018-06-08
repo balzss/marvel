@@ -1,39 +1,20 @@
 import React, { Component } from 'react';
 import './App.css';
+import fuzzySearch from 'fuzzysearch';
 
 const API_KEY = '937517d8496fc712bbb2e6291ca03b27';
-
-var heroes = [];
-
-async function getCharactersByLetter(startsWith, offset = 0) {
-    const endPoint = 'https://gateway.marvel.com/v1/public/' + `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=100&offset=${offset}`;
-
-    const retVal = await fetch(endPoint)
-        .then(response => response.json())
-        .then(result => {
-            return result.data;
-    });
-
-    console.log(retVal);
-
-    if(retVal.count >= 100) {
-        console.log('if ag');
-        const next = await getCharactersByLetter(startsWith, offset + 100);
-        return [...retVal.results, ...next];
-    } else {
-        return retVal.results;
-    }
-}
 
 class Card extends Component {
     render() {
         return (
             <div className="card">
                 <div className="img-container">
-                    <img src={((this.props.data || {}).thumbnail || {}).path + '.jpg'}/>
+                    <img alt="anyad" src={((this.props.data || {}).thumbnail || {}).path + '.jpg'}/>
                 </div>
-                <h3 className="hero-name">{(this.props.data || {}).name}</h3>
-            <p>{(this.props.data || {}).description}</p>
+                <div className="right-side">
+                    <h3 className="hero-name">{(this.props.data || {}).name}</h3>
+                    <p className="details">{(this.props.data || {}).description}</p>
+                </div>
             </div>
         );
     }
@@ -44,27 +25,28 @@ class App extends Component {
         super(props);
         this.state = {
             searchQuery: '',
-            results: [],
-            heroes: []
+            initResults: []
         };
     }
 
     handleSearchInput(event) {
         const typedQuery = event.target.value;
-        this.setState({searchQuery: typedQuery});
 
-        if(typedQuery.length === 1) {
+        if(typedQuery.length === 1 && this.state.searchQuery === '') {
             this.getSearchResults(typedQuery);
         } else if (typedQuery.length === 0) {
-            this.setState({results: []});
+            this.setState({initResults: []});
         }
+
+        this.setState({searchQuery: typedQuery});
     }
 
     async getSearchResults(startsWith) {
+
+        document.querySelector('.spinner i').style.display = 'block';
+
         const endPoint = 'https://gateway.marvel.com/v1/public/' +
             `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=100&offset=`;
-
-        this.setState({results: []});
 
         let i = 0;
         while(true) {
@@ -73,25 +55,36 @@ class App extends Component {
                 .then(result => {
                     return result.data;
             });
-            this.state.results.push(...retVal.results);
-            this.setState({results: [...this.state.results, ...retVal.results]});
-            console.log(this.state.results);
+            this.setState({initResults: [...this.state.initResults, ...retVal.results]});
+            console.log(this.state.initResults);
 
+            document.querySelector('.spinner i').style.display = 'none';
             if(retVal.count < 100) break;
 
             i++;
         }
+
     }
 
     createResultList() {
-        return this.state.results.map((result, index) => <Card data={result} key={index}/>);
+        return this.state.initResults
+            .filter(r => {
+                // return r.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase());
+                return fuzzySearch(this.state.searchQuery.toLowerCase(), r.name.toLowerCase());
+            }).map((result, index) => {
+                return (<Card data={result} key={index}/>);
+            });
     }
 
     render() {
         return (
             <div className="container">
                 <div className="search-bar">
+                    <i className="fas fa-search"></i>
                     <input type="text" value={this.state.searchQuery} onChange={this.handleSearchInput.bind(this)}/>
+                </div>
+                <div className="spinner">
+                    <i className="fas fa-spinner"></i>
                 </div>
                 {this.createResultList()}
             </div>
