@@ -1,16 +1,32 @@
 @import url('https://fonts.googleapis.com/css?family=Permanent+Marker');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 
+@font-face {
+    font-family: "Helsinki";
+    src: url(./helsinki.ttf) format("truetype");
+}
+
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
 body {
-    margin: 94px 12px;
     background: rgb(246,68,69);
     background: linear-gradient(90deg, rgba(246,68,69,1) 0%, rgba(171,56,111,1) 60%, rgba(117,51,156,1) 100%);
     font-family: 'Open Sans', sans-serif;
-    box-sizing: border-box;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 92px 12px;
 }
 
 .search-bar {
-    box-sizing: border-box;
     position: absolute;
     top: 0;
     left: 0;
@@ -33,12 +49,13 @@ body {
 .search-bar > input {
     opacity: 0.7;
     width: 600px;
+    max-width: 90%;
     background-color: transparent;
     border: none;
     border-bottom: 1px solid #ccc;
     outline: none;
     color: inherit;
-    font-size: 28px;
+    font-size: 24px;
 }
 
 .container {
@@ -58,7 +75,6 @@ body {
     display: flex;
     width: 100%;
     height: auto;
-    box-sizing: border-box;
 }
 
 .card > .img-container {
@@ -80,19 +96,21 @@ body {
 
 .card .hero-name {
     margin: 0;
-    font-family: 'Permanent Marker', cursive;
+    /* font-family: 'Permanent Marker', cursive; */
+    font-family: 'Helsinki', sans-serif;
 }
 
 .card .button-row {
     display: flex;
     justify-content: flex-end;
+    margin: 8px;
 }
 
-.card .button .text, .card .button2 .text {
+.card .button .text {
     transform: skewX(20deg);
 }
 
-.card .button:hover, .card .button2:hover {
+.card .button:hover {
     background-size: 100% 100%;
 }
 
@@ -115,24 +133,6 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-.card .button2 {
-    background-size: 0 100%;
-    background-image: linear-gradient(to left, #f64445, #75339c);
-    /* background-image: linear-gradient(to left, #75339c, #75339c); */
-    background-repeat: no-repeat;
-    transition: all 0.5s;
-    display: inline-block;
-    cursor: pointer;
-    padding: 4px 10px;
-    padding-bottom: 6px;
-    font-size: 12px;
-    color: white;
-    background-color: #f64445;
-    transform: skewX(-20deg);
-    margin-right: 14px;
-    font-weight: 700;
-    transition: all 0.2s ease-in-out;
-}
 
 .spinner {
     display: flex;
@@ -151,4 +151,19 @@ body {
 @keyframes spin {
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
+}
+
+@media (max-width: 576px) {
+    .card {
+        flex-direction: column;
+    }
+
+    .card .img-container {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .card .right-side {
+        width: 100%;
+    }
 }
