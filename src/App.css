@@ -1,3 +1,70 @@
+@import url('https://fonts.googleapis.com/css?family=Permanent+Marker');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
 body {
-    background-color: #ddd;
+    margin: 84px 12px;
+    background: rgb(246,68,69);
+    background: linear-gradient(90deg, rgba(246,68,69,1) 0%, rgba(171,56,111,1) 60%, rgba(117,51,156,1) 100%);
+    font-family: 'Open Sans', sans-serif;
+    box-sizing: border-box;
+}
+
+.search-bar {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 24px;
+}
+
+.search-bar > input {
+    width: 600px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    color: inherit;
+    font-size: 28px;
+}
+
+.container {
+    max-width: 600px;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.card {
+    background-color: #181818;
+    color: #f0f0f0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    margin: 12px 0;
+    padding: 20px 24px;
+    display: flex;
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.card > .hero-name {
+    margin: 0;
+    font-family: 'Permanent Marker', cursive;
+}
+
+.card > .img-container {
+    width: 30%;
+    height: auto;
+    margin-right: 20px;
+}
+
+.card > .img-container > img {
+    width: 100%;
+    height: auto;
 }

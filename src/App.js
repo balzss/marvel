@@ -28,11 +28,12 @@ async function getCharactersByLetter(startsWith, offset = 0) {
 class Card extends Component {
     render() {
         return (
-            <div>
-                <h3>{(this.props.data || {}).name}</h3>
-                <img src={((this.props.data || {}).thumbnail || {}).path + '.jpg'} width="120"/>
+            <div className="card">
+                <div className="img-container">
+                    <img src={((this.props.data || {}).thumbnail || {}).path + '.jpg'}/>
+                </div>
+                <h3 className="hero-name">{(this.props.data || {}).name}</h3>
             <p>{(this.props.data || {}).description}</p>
-                <hr/>
             </div>
         );
     }
@@ -88,9 +89,11 @@ class App extends Component {
 
     render() {
         return (
-            <div>
-            <input type="text" value={this.state.searchQuery} onChange={this.handleSearchInput.bind(this)}/>
-            {this.createResultList()}
+            <div className="container">
+                <div className="search-bar">
+                    <input type="text" value={this.state.searchQuery} onChange={this.handleSearchInput.bind(this)}/>
+                </div>
+                {this.createResultList()}
             </div>
         );
     }
