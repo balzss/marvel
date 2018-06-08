@@ -6,23 +6,29 @@ const API_KEY = '937517d8496fc712bbb2e6291ca03b27';
 const PAGE_SIZE = 10;
 const LOREM_IPSUM = 'Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero\'s De Finibus Bonorum et Malorum for use in a type specimen book.';
 
+function stripHtml(html){
+    const tmpElem = document.createElement('div');
+    tmpElem.innerHTML = html;
+    return tmpElem.textContent || tmpElem.innerText || LOREM_IPSUM;
+}
+
 class Card extends Component {
     render() {
         return (
             <div className="card">
                 <div className="img-container">
-                    <img alt="anyad" src={((this.props.data || {}).thumbnail || {}).path + '.jpg'}/>
+                    <img alt="character avatar" src={((this.props.data || {}).thumbnail || {}).path + '.jpg'}/>
                 </div>
                 <div className="right-side">
                     <h3 className="hero-name">{(this.props.data || {}).name}</h3>
-                    <p className="details">{(this.props.data || {}).description || LOREM_IPSUM}</p>
+                    <p className="details">{stripHtml((this.props.data || {}).description)}</p>
                     <div className="button-row">
                         <div className="button style1">
                             <div className="text">
                                 comics
                             </div>
                         </div>
-                        <div className="button2">
+                        <div className="button">
                             <div className="text">
                                 stories
                             </div>
@@ -100,7 +106,7 @@ class App extends Component {
             <div className="container">
                 <div className="search-bar">
                     <i className="fas fa-search"></i>
-                    <input type="text" value={this.state.searchQuery} onChange={this.handleSearchInput.bind(this)}/>
+                    <input type="text" value={this.state.searchQuery} onChange={this.handleSearchInput.bind(this)} placeholder="Search for a character..."/>
                 </div>
                 <div className="spinner">
                     <i className="fas fa-spinner"></i>
