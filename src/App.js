@@ -3,6 +3,7 @@ import './App.css';
 import fuzzySearch from 'fuzzysearch';
 
 const API_KEY = '937517d8496fc712bbb2e6291ca03b27';
+const PAGE_SIZE = 10;
 
 class Card extends Component {
     render() {
@@ -46,11 +47,11 @@ class App extends Component {
         document.querySelector('.spinner i').style.display = 'block';
 
         const endPoint = 'https://gateway.marvel.com/v1/public/' +
-            `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=100&offset=`;
+            `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=${PAGE_SIZE}&offset=`;
 
         let i = 0;
         while(true) {
-            const retVal = await fetch(endPoint + (i * 100))
+            const retVal = await fetch(endPoint + (i * PAGE_SIZE))
                 .then(response => response.json())
                 .then(result => {
                     return result.data;
@@ -59,7 +60,7 @@ class App extends Component {
             console.log(this.state.initResults);
 
             document.querySelector('.spinner i').style.display = 'none';
-            if(retVal.count < 100) break;
+            if(retVal.count < PAGE_SIZE) break;
 
             i++;
         }
