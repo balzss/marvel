@@ -77,12 +77,14 @@ class App extends Component {
         while(true) {
 
             const currentPageSize = i > 0 ? 50 : 5;
+            const offet = i > 0 ? (i-1) * 50 + 5: 0;
 
-            const retVal = await fetch(endPoint + `limit=${currentPageSize}&offset=${(i * currentPageSize)}`)
+            const retVal = await fetch(endPoint + `limit=${currentPageSize}&offset=${offet}`)
                 .then(response => response.json())
                 .then(result => {
                     return result.data;
             });
+            console.log(retVal.results);
 
             if(!this.state.searchQuery.startsWith(startsWith)) break;
 
