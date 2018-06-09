@@ -3,7 +3,6 @@ import './App.css';
 import fuzzySearch from 'fuzzysearch';
 
 const API_KEY = '937517d8496fc712bbb2e6291ca03b27';
-const PAGE_SIZE = 10;
 const LOREM_IPSUM = 'Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero\'s De Finibus Bonorum et Malorum for use in a type specimen book.';
 
 function stripHtml(html){
@@ -61,6 +60,7 @@ class App extends Component {
             this.getSearchResults(typedQuery);
         } else if (typedQuery.length === 0) {
             this.setState({initResults: []});
+            document.querySelector('.spinner i').style.display = 'none';
         }
 
         this.setState({searchQuery: typedQuery});
@@ -71,20 +71,26 @@ class App extends Component {
         document.querySelector('.spinner i').style.display = 'block';
 
         const endPoint = 'https://gateway.marvel.com/v1/public/' +
-            `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&limit=${PAGE_SIZE}&offset=`;
+            `characters?nameStartsWith=${startsWith}&apikey=${API_KEY}&`;
 
         let i = 0;
         while(true) {
-            const retVal = await fetch(endPoint + (i * PAGE_SIZE))
+
+            const currentPageSize = i > 0 ? 50 : 5;
+
+            const retVal = await fetch(endPoint + `limit=${currentPageSize}&offset=${(i * currentPageSize)}`)
                 .then(response => response.json())
                 .then(result => {
                     return result.data;
             });
+
+            if(!this.state.searchQuery.startsWith(startsWith)) break;
+
             this.setState({initResults: [...this.state.initResults, ...retVal.results]});
-            console.log(this.state.initResults);
 
             document.querySelector('.spinner i').style.display = 'none';
-            if(retVal.count < PAGE_SIZE) break;
+
+            if(retVal.count < currentPageSize) break;
 
             i++;
         }
@@ -94,7 +100,6 @@ class App extends Component {
     createResultList() {
         return this.state.initResults
             .filter(r => {
-                // return r.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase());
                 return fuzzySearch(this.state.searchQuery.toLowerCase(), r.name.toLowerCase());
             }).map((result, index) => {
                 return (<Card data={result} key={index}/>);
