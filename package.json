@@ -1,5 +1,5 @@
 {
-  "name": "Mervel Character Search",
+  "name": "marvel-search",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
